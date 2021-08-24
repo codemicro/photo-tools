@@ -1,16 +1,22 @@
 <script>
-import { each } from "svelte/internal";
 
+    let data = {
+        classifier: "",
+        film_stock: "",
+        shots: 24,
+        camera: "",
+        load_date: "",
+        lab: "",
+        dev_date: "",
+        notes: "",
+        data: [],
+    }
 
-
-	let inputClassifier = ""
-	let inputFilmStock = ""
-	let inputShots = 24
-	let inputCamera = ""
 	let inputLoadDate
-	let inputLab = ""
-	let inputDevDate
-	let inputNotes = ""
+    $: data.load_date = inputLoadDate !== undefined ? formatDate(new Date(inputLoadDate)) : ""
+    let inputDevDate
+    $: data.dev_date = inputDevDate !== undefined ? formatDate(new Date(inputDevDate)) : ""
+
 	let selectCategory
 	let inputCategoryDate
 	let inputCategoryNote = ""
@@ -34,22 +40,12 @@ import { each } from "svelte/internal";
 	}
 
 	function generate() {
-		const dataBlock = {
-			"classifier": inputClassifier,
-			"film_stock": inputFilmStock,
-			"shots": inputShots.toString(),
-			"camera": inputCamera,
-			"load_date": formatDate(new Date(inputLoadDate)),
-			"lab": inputLab,
-			"dev_date": formatDate(new Date(inputLoadDate)),
-			"notes": inputNotes,
-			"data": categories,
-		}
+        data.data = categories
 
 		const link = document.createElement("a")
 		link.type = "application/json"
 		link.download = "shots.json"
-		link.href = URL.createObjectURL(new Blob([JSON.stringify(dataBlock)]))
+		link.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 4)]))
 		link.click()
 
 		location.reload()
@@ -108,7 +104,7 @@ import { each } from "svelte/internal";
                 <label for="inputClassifier" class="col-form-label">Classifier</label>
             </div>
             <div class="col">
-                <input type="text" id="inputClassifier" class="form-control" bind:value={inputClassifier}>
+                <input type="text" id="inputClassifier" class="form-control" bind:value={data.classifier}>
             </div>
         </div>
         
@@ -117,7 +113,7 @@ import { each } from "svelte/internal";
                 <label for="inputFilmStock" class="col-form-label">Film stock</label>
             </div>
             <div class="col">
-                <input type="text" id="inputFilmStock" class="form-control" bind:value={inputFilmStock}>
+                <input type="text" id="inputFilmStock" class="form-control" bind:value={data.film_stock}>
             </div>
         </div>
         
@@ -126,7 +122,7 @@ import { each } from "svelte/internal";
                 <label for="inputShots" class="col-form-label">Shots</label>
             </div>
             <div class="col">
-                <input type="number" id="inputShots" class="form-control" bind:value={inputShots}>
+                <input type="number" id="inputShots" class="form-control" bind:value={data.shots}>
             </div>
         </div>
         
@@ -135,7 +131,7 @@ import { each } from "svelte/internal";
                 <label for="inputCamera" class="col-form-label">Camera</label>
             </div>
             <div class="col">
-                <input type="text" id="inputCamera" class="form-control" bind:value={inputCamera}>
+                <input type="text" id="inputCamera" class="form-control" bind:value={data.camera}>
             </div>
         </div>
         
@@ -153,7 +149,7 @@ import { each } from "svelte/internal";
                 <label for="inputLab" class="col-form-label">Lab</label>
             </div>
             <div class="col">
-                <input type="text" id="inputLab" class="form-control"  bind:value={inputLab}>
+                <input type="text" id="inputLab" class="form-control"  bind:value={data.lab}>
             </div>
         </div>
         
@@ -171,7 +167,7 @@ import { each } from "svelte/internal";
                 <label for="inputLab" class="col-form-label">Notes</label>
             </div>
             <div class="col">
-                <textarea id="inputNotes" rows="3"  bind:value={inputNotes}></textarea>
+                <textarea id="inputNotes" rows="3"  bind:value={data.notes}></textarea>
             </div>
         </div>
         
