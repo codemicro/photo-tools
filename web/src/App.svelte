@@ -80,7 +80,7 @@
 			"shot_number": inputShotNumber.toString(),
 			"exposure": inputExposure,
 			"shutter_speed": inputShutterSpeed,
-			"aperture": inputAperture.charAt(0).toLowerCase() !== "f" ? "f" + inputAperture : inputAperture,
+			"aperture": inputAperture.charAt(0).toLowerCase() !== "f" || inputAperture !== "" ? "f" + inputAperture : inputAperture,
 			"notes": inputShotNote,
 		}
 
