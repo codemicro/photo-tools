@@ -38,7 +38,7 @@ def draw_info_box(pdf, classifier, film_stock, shots, camera, load_date, locatio
     pdf.ln()
 
     pdf.set_font(FONT, size=13)
-    pdf.write_text(f"{film_stock}/{shots}")
+    pdf.write_text(f"{film_stock} ({shots} shots)")
     pdf.ln(h=13)
     pdf.write_text(f"{camera} - load {load_date}")
 
@@ -122,6 +122,8 @@ locations = []
 seen = []
 for x in from_file["data"]:
     y = x["notes"]
+    if y == "":
+        continue
     if y.lower() not in seen:
         locations.append(y)
         seen.append(y.lower())
