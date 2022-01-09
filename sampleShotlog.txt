@@ -1,0 +1,17 @@
+classifier: 21SEP-02
+film_stock: Ars Imago 320
+shots: 36
+camera: Praktica BX20
+load_date: 02SEP21
+lab: NSB DIY
+dev_date: 15OCT21
+notes: All shots on Helios 44-2 50mm unless otherwise stated\nI think this film is rebranded Foma Retropan 320\nDeveloped with Ilford ID11 1+1 for 11m30s
+
+category 02SEP21 Fermyn Woods:
+    shot 0 +0 8 f4: Half shot taken on the film leader
+    shot 1 +1 15 f4
+
+category 12SEP21:
+    shot 2 +0 60 f4: Flowers and mucky wall
+    shot 3 +0 125 f4: Old bus (routemaster?)
+    shot 4   : This has no exposure, aperture or shutter speed information.

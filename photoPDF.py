@@ -9,6 +9,11 @@ INPUT_FILE = sys.argv[1]
 PDF_W=210/0.35
 PDF_H=297/0.35
 
+def list_get(l, i, default=""):
+    if i >= len(l):
+        return default
+    return l[i]
+
 def parse_shotlog(shotlog_content: str) -> Dict:
     output = {}
     current_category = None
@@ -21,8 +26,8 @@ def parse_shotlog(shotlog_content: str) -> Dict:
         operand, rest = sp[0], sp[1:]
         if operand.endswith(":"): 
             operand = operand.strip(":")
-        if rest[-1].endswith(":"):
-            rest[-1] = rest[-1].strip(":")
+        
+        rest = [x.rstrip(":") for x in rest]
         
         if operand.lower() == "category":
             date, notes = rest[0], " ".join(rest[1:]).rstrip(":")
@@ -38,10 +43,10 @@ def parse_shotlog(shotlog_content: str) -> Dict:
                 raise ValueError("no category declaration before shot declaration")
 
             output["data"][current_category]["data"].append({
-                "shot_number": rest[0],
-                "exposure": rest[1],
-                "shutter_speed": rest[2],
-                "aperture": rest[3],
+                "shot_number": list_get(rest, 0),
+                "exposure": list_get(rest, 1),
+                "shutter_speed": list_get(rest, 2),
+                "aperture": list_get(rest, 3),
                 "notes": " ".join(rest[4:])
             })
         else:
