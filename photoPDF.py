@@ -1,10 +1,53 @@
+from typing import Dict
 from fpdf import FPDF
 import json
 import sys
 
+INPUT_FILE = sys.argv[1]
+
 # dimensions for the PDF is A4 in points - these values correspond to that
 PDF_W=210/0.35
 PDF_H=297/0.35
+
+def parse_shotlog(shotlog_content: str) -> Dict:
+    output = {}
+    current_category = None
+
+    lines = shotlog_content.strip().replace("\n\n", "\n").splitlines()
+
+    for line in lines:
+
+        sp = line.strip().split(" ")
+        operand, rest = sp[0], sp[1:]
+        if operand.endswith(":"): 
+            operand = operand.strip(":")
+        if rest[-1].endswith(":"):
+            rest[-1] = rest[-1].strip(":")
+        
+        if operand.lower() == "category":
+            date, notes = rest[0], " ".join(rest[1:]).rstrip(":")
+            if current_category is None:    
+                output["data"] = []
+                current_category = 0
+            else:
+                current_category += 1
+            output["data"].append({"date": date, "notes": notes, "data": []})
+        elif operand.lower() == "shot":
+
+            if current_category is None:
+                raise ValueError("no category declaration before shot declaration")
+
+            output["data"][current_category]["data"].append({
+                "shot_number": rest[0],
+                "exposure": rest[1],
+                "shutter_speed": rest[2],
+                "aperture": rest[3],
+                "notes": " ".join(rest[4:])
+            })
+        else:
+            output[operand] = " ".join(rest).replace("\\n", "\n")
+
+    return output
 
 class PDF(FPDF):
 
@@ -107,7 +150,13 @@ def draw_table(pdf, data):
 pdf = PDF(unit="pt")
 pdf.add_page()
 
-from_file = json.load(open(sys.argv[1]))
+from_file = None
+
+with open(INPUT_FILE) as f:
+    if INPUT_FILE.endswith("json"):
+        from_file = json.load(f)
+    else:
+        from_file = parse_shotlog(f.read())
 
 draw_table(pdf, from_file)
 
